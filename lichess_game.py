@@ -58,10 +58,6 @@ class Lichess_Game:
         self.scores: list[chess.engine.PovScore] = []
         self.last_message = 'No eval available yet.'
         self.last_pv: list[chess.Move] = []
-        self.cloud_success_count = 0
-        self.cloud_total_attempts = 0
-        self.chessdb_success_count = 0
-        self.chessdb_total_attempts = 0
 
     @classmethod
     async def acreate(cls, api: API, config: Config, username: str, game_info: Game_Information) -> 'Lichess_Game':
@@ -474,8 +470,6 @@ class Lichess_Game:
         if out_of_book or too_deep or too_many_moves or not has_time:
             return
 
-        self.cloud_total_attempts += 1
-
         start_time = time.perf_counter()
         response = await self.api.get_cloud_eval(self.board.fen().replace('[', '/').replace(']', ''),
                                                  self.game_info.variant,
@@ -494,7 +488,6 @@ class Lichess_Game:
             return
 
         self.out_of_cloud_counter = 0
-        self.cloud_success_count += 1
         pv = [chess.Move.from_uci(uci_move) for uci_move in response['pvs'][0]['moves'].split()]
         if self._is_repetition(pv[0]):
             return
@@ -524,7 +517,6 @@ class Lichess_Game:
         if out_of_book or too_deep or too_many_moves or not has_time or is_endgame:
             return
 
-        self.chessdb_total_attempts += 1
         start_time = time.perf_counter()
         response = await self.api.get_chessdb_eval(fen := self.board.fen(), self.config.online_moves.chessdb.timeout)
         if response is None:
@@ -542,7 +534,6 @@ class Lichess_Game:
             return
 
         self.out_of_chessdb_counter = 0
-        self.chessdb_success_count += 1
         if self.config.online_moves.chessdb.selection == 'optimal' or response['moves'][0]['rank'] == 0:
             candidate_moves = [chessdb_move for chessdb_move in response['moves']
                                if chessdb_move['score'] == response['moves'][0]['score']]
@@ -883,13 +874,6 @@ class Lichess_Game:
 
         return output
 
-    def _calculate_dynamic_priority(self, base_priority: int, success_count: int, total_attempts: int) -> int:
-        if total_attempts == 0:
-            return base_priority
-        success_rate = success_count / total_attempts
-        multiplier = 0.5 + success_rate
-        return int(base_priority * multiplier)
-
     def _get_move_sources(self) -> list[Callable[[], Awaitable[Move_Response | None]]]:
         move_sources: list[Callable[[], Awaitable[Move_Response | None]]] = []
 
@@ -918,28 +902,12 @@ class Lichess_Game:
         if self.config.online_moves.lichess_cloud.enabled:
             if not self.config.online_moves.lichess_cloud.only_without_book or not self.book_settings.readers:
                 if self.board.uci_variant == 'chess' or self.config.online_moves.lichess_cloud.use_for_variants:
-                    if self.config.online_moves.dynamic_selection:
-                        priority = self._calculate_dynamic_priority(
-                            self.config.online_moves.lichess_cloud.priority,
-                            self.cloud_success_count,
-                            self.cloud_total_attempts
-                        )
-                    else:
-                        priority = self.config.online_moves.lichess_cloud.priority
-                    opening_sources[self._make_cloud_move] = priority
+                    opening_sources[self._make_cloud_move] = self.config.online_moves.lichess_cloud.priority
 
         if self.config.online_moves.chessdb.enabled:
             if not self.config.online_moves.chessdb.only_without_book or not self.book_settings.readers:
                 if self.board.uci_variant == 'chess':
-                    if self.config.online_moves.dynamic_selection:
-                        priority = self._calculate_dynamic_priority(
-                            self.config.online_moves.chessdb.priority,
-                            self.chessdb_success_count,
-                            self.chessdb_total_attempts
-                        )
-                    else:
-                        priority = self.config.online_moves.chessdb.priority
-                    opening_sources[self._make_chessdb_move] = priority
+                    opening_sources[self._make_chessdb_move] = self.config.online_moves.chessdb.priority
 
         move_sources += [opening_source
                          for opening_source, _
