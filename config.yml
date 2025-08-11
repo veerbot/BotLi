@@ -6,7 +6,7 @@ engines:
     name: "supranova"
     ponder: true
     silence_stderr: false
-    move_overhead_multiplier: 6.5
+    move_overhead_multiplier: 10.5
     uci_options:
       Threads: 4
       Hash: 4096
@@ -177,7 +177,7 @@ matchmaking:
     bm3:
       tc: 1+0
     gulugulu:
-      tc: 0+1
+      tc: 0+3
     guliguli:
       tc: 10+0
     hvj:
