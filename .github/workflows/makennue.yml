@@ -1,0 +1,39 @@
+name: Download  NNUE
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"  # Runs weekly on Sunday at midnight UTC
+
+jobs:
+  download-nnue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Zstandard
+        run: sudo apt-get install -y zstd curl jq
+
+      - name: Download latest Viridithas NNUE .zst
+        run: |
+          # Get latest NNUE asset URL from GitHub API
+          NNUE_URL=$(curl -s https://api.github.com/repos/cosmobobak/viridithas-networks/releases/latest \
+            | jq -r '.assets[0].browser_download_url')
+
+          echo "Downloading $NNUE_URL"
+          curl -L "$NNUE_URL" -o engines/temp.nnue.zst
+
+      - name: Decompress and rename
+        run: |
+          zstd -d engines/temp.nnue.zst -o engines/supranova.nnue
+          rm engines/temp.nnue.zst
+
+      - name: Commit and push updated NNUE
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add engines/supranova.nnue
+          git commit -m "Update SupraNova NNUE network"
+          git push

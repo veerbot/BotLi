@@ -10,7 +10,8 @@ engines:
     uci_options:
       Threads: 4
       Hash: 4096
-      Move Overhead: 150
+    #  Move Overhead: 150
+      EvalFile: "supranova.nnue"
     limits:
       # time: 20.0
       # depth: 50
