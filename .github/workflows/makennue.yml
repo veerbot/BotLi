@@ -1,0 +1,39 @@
+name: Download Viridithas NNUE
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"  # runs weekly on Sunday at midnight UTC
+
+jobs:
+  download-nnue:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Zstandard
+        run: sudo apt-get install -y zstd curl jq
+
+      - name: Download latest Viridithas NNUE .zst
+        run: |
+          # Get the latest NNUE asset URL from GitHub API
+          NNUE_URL=$(curl -s https://api.github.com/repos/cosmobobak/viridithas-networks/releases/latest \
+            | jq -r '.assets[0].browser_download_url')
+
+          echo "Downloading $NNUE_URL"
+          curl -L "$NNUE_URL" -o engines/viridithas.nnue.zst
+
+      - name: Decompress NNUE file
+        run: |
+          zstd -d engines/viridithas.nnue.zst -o engines/viridithas.nnue
+          rm engines/viridithas.nnue.zst
+
+      - name: Commit and push updated NNUE
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add engines/viridithas.nnue
+          git commit -m "Update Viridithas NNUE network"
+          git push
