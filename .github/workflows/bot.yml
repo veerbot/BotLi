@@ -1,85 +1,59 @@
-name: Smart Sequential Lichess Bot
+name: Run bot
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - "main"
     paths:
       - "user_interface.py"
   schedule:
     - cron: "1 */5 * * *"  # Every 5 hours at minute 1
-concurrency: # ✅ Added here to allow multiple runs to overlap until Smart Wait
-  group: none
-  cancel-in-progress: false
 
 jobs:
   build:
+    concurrency:
+      group: bot-run
+      cancel-in-progress: false  # Keep this false for fastest restarts
+
     runs-on: ubuntu-latest
-    timeout-minutes: 355  # Just under GitHub 6-hour limit
+    timeout-minutes: 355  # Just under 6-hour GitHub limit
 
     steps:
-      # Step 1: Checkout repo
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      # Step 2: Install Python & dependencies
+      - name: Install GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh
+
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.12'
+          cache: 'pip'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
 
-      # Step 3: Smart wait (after setup but before bot run)
-      - name: Smart Wait for Previous Run
-        run: |
-          echo "Checking if another run of this workflow is in progress..."
-          while true; do
-            RUNS=$(gh run list \
-              --workflow "$(basename "$GITHUB_WORKFLOW")" \
-              --status in_progress \
-              --json databaseId \
-              --jq '. | length')
-
-            if [ "$RUNS" -gt 1 ]; then
-              echo "Another run is in progress. Waiting 10s..."
-              sleep 10
-            else
-              echo "No previous runs detected. Continuing..."
-              break
-            fi
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Step 4: Inject Lichess API token
       - name: Inject Secret Token
         run: sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
 
-      # Step 5: Make Stockfish executable
       - name: Make Stockfish Executable
-        run: chmod +x ./engines/supranova11
+        run: | 
+             chmod +x ./engines/supranova11
 
-      # Step 6: Run the bot
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          python3 -u user_interface.py --upgrade "matchmaking" &
+          python3 -u user_interface.py "matchmaking" &
           PID=$!
           
-          # Auto-exit after 350 minutes
+          # Auto-exit after 350 minutes (so restart runs without overlap)
           ( sleep 20700 && echo "Time up. Killing bot..." && kill -SIGTERM $PID ) &
           
           wait $PID
           echo "Bot ended cleanly."
 
-      # Step 7: Self-restart
       - name: 🔁 Self-Restart (Fire-and-Forget)
         if: always()
         run: gh workflow run bot.yml
