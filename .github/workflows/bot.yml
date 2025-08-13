@@ -9,6 +9,9 @@ on:
       - "user_interface.py"
   schedule:
     - cron: "1 */5 * * *"  # Every 5 hours at minute 1
+concurrency: # ✅ Added here to allow multiple runs to overlap until Smart Wait
+  group: none
+  cancel-in-progress: false
 
 jobs:
   build:
