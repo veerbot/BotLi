@@ -1,0 +1,23 @@
+name: Run SupraNova Engine (Linux)
+
+on:
+  workflow_dispatch:  # Allows manual run
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make engine executable
+        run: chmod +x engines/SupraNova
+
+      - name: Run engine with UCI
+        run: |
+          ./engines/SupraNova <<EOF
+          uci
+          isready
+          quit
+          EOF
