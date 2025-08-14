@@ -12,11 +12,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Make engine executable
-        run: chmod +x engines/SupraNova
+        run: chmod +x engines/supranova
 
       - name: Run engine with UCI
         run: |
-          ./engines/SupraNova <<EOF
+          ./engines/supranova <<EOF
           uci
           isready
           quit
