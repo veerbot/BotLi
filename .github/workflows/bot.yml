@@ -40,7 +40,7 @@ jobs:
 
       - name: Make Stockfish Executable
         run: | 
-             chmod +x ./engines/SupraNova
+             chmod +x ./engines/supranova
 
       - name: Run Bot
         run: |
