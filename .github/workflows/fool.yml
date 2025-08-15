@@ -1,10 +1,10 @@
-name: Print UCI Info
+name: Print UCI ID Info
 
 on:
   workflow_dispatch:
 
 jobs:
-  uci-info:
+  uci-id-info:
     runs-on: ubuntu-latest
 
     steps:
@@ -12,10 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Make sure binary is executable (if not already)
+      # 2. Make engine executable
       - name: Make engine executable
         run: chmod +x engines/realsupranova
 
-      # 3. Print UCI info
-      - name: Print UCI info
-        run: engines/realsupranova uci
+      # 3. Print only lines containing 'id'
+      - name: Print UCI id info
+        run: engines/realsupranova uci | grep "^id"
