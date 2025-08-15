@@ -1,0 +1,21 @@
+name: Print UCI Info
+
+on:
+  workflow_dispatch:
+
+jobs:
+  uci-info:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Make sure binary is executable (if not already)
+      - name: Make engine executable
+        run: chmod +x engines/realsupranova
+
+      # 3. Print UCI info
+      - name: Print UCI info
+        run: engines/realsupranova uci
