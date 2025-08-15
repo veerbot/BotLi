@@ -3,7 +3,7 @@ token: "TokenTimeIsBackBuddyss"  # Lichess OAuth2 Token.
 engines:
   standard:
     dir: "./engines"
-    name: "supranova11.0"
+    name: "Supranova11.0"
     ponder: true
     silence_stderr: false
     move_overhead_multiplier: 10.5
