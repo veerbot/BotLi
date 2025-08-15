@@ -20,7 +20,7 @@ engines:
 
 syzygy:
   standard:
-    enabled: false
+    enabled: true
     paths:
       - "./engines/syzygy"
     max_pieces: 7
