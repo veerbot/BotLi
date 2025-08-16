@@ -89,9 +89,11 @@ class Chatter:
             case 'eval':
                 await self._send_last_message(chat_message.room)
             case 'motor':
-                await self.api.send_chat_message(self.game_info.id_, chat_message.room, self.lichess_game.engine.name)
+                await self.api.send_chat_message(self.game_info.id_, chat_message.room, 
+                                                 'SupraNova11')
             case 'name':
-                await self.api.send_chat_message(self.game_info.id_, chat_message.room, SupraNova11)
+                await self.api.send_chat_message(self.game_info.id_, chat_message.room, 
+                                                 'SupraNova11')
             case 'printeval':
                 if not self.game_info.increment_ms and self.game_info.initial_time_ms < 180_000:
                     await self._send_last_message(chat_message.room)
