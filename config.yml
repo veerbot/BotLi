@@ -16,14 +16,14 @@ engines:
       # time: 20.0
       # depth: 50
       # nodes: 8000000
-  standard_human: 
-    dir: "./engines"
-    name: "supraengine.py"
-    ponder: false 
-    silence_stderr: false
-    move_overhead_multiplier: 4.0
-    uci_options: 
-    limits: 
+#  standard_human: 
+   # dir: "./engines"
+#    name: "supraengine.py"
+ #   ponder: false 
+ #   silence_stderr: false
+   # move_overhead_multiplier: 4.0
+#    uci_options: 
+ #   limits: 
 
 syzygy:
   standard:
