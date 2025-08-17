@@ -16,7 +16,7 @@ engines:
       # time: 20.0
       # depth: 50
       # nodes: 8000000
-  standard_human: 
+  standard_humans: 
     dir: "./engines"
     name: "supraengine.py"
     ponder: false 
