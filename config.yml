@@ -21,7 +21,7 @@ engines:
     name: "supraengine.py"
     ponder: false 
     silence_stderr: false
-    move_overhead_multiplier: 4
+    move_overhead_multiplier: 4.0
     uci_options: 
     limits: 
 
