@@ -347,7 +347,7 @@ def alpha_beta(board: chess.Board, depth:int, alpha:int, beta:int, ply:int, allo
     global node_count, TT_AGE
     if timeout(): raise TimeoutError
     node_count += 1
-    key = board.transposition_key()
+    key = board._transposition_key
     ttent = TT.get(key)
     if ttent and ttent.depth >= depth:
         if ttent.flag == TT_EXACT:
