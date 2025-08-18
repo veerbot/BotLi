@@ -548,7 +548,7 @@ def root_search(board: chess.Board, max_depth:int, movetime:Optional[float]=None
             if best_move and depth >= 2:
                 alpha = best_score - ASPIRATION
                 beta = best_score + ASPIRATION
-            ttbest = TT.get(board.zobrist_hash()).best if TT.get(board.zobrist_hash()) else None
+            ttbest = TT.get(board.transposition_key()).best if TT.get(board.transposition_key()) else None
             moves = list(board.legal_moves)
             moves = order_moves(board, moves, ttbest, 0)
             root_scores = []
@@ -581,7 +581,7 @@ def extract_pv(board: chess.Board, depth_limit:int) -> List[chess.Move]:
     pv = []
     b = board.copy()
     for _ in range(depth_limit):
-        e = TT.get(b.zobrist_hash())
+        e = TT.get(b.transposition_key())
         if not e or not e.best: break
         mv = e.best
         if mv not in b.legal_moves: break
