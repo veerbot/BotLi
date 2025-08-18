@@ -1,7 +1,5 @@
-
 #!/usr/bin/env python3
 """
-
 This variant adds bitboard-friendly optimizations:
 - caches piece bitboards and uses int bitboard operations (lsb) in hot paths
 - implements a faster SEE that simulates captures using bitboards (avoids heavy board.copy()/push/pop when possible)
