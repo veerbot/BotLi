@@ -201,8 +201,8 @@ matchmaking:
 messages:
   greeting: "Konnichiwa guzaimase! ❤️‍🔥Using help of SupraNova11 Type !help to glimpse my arsenal. Best of luck"
   goodbye: "GGs, ezz. May we meet again, may I win again 💶 {me} signing off!"
-  greeting_spectators: "ITZ {engine} in {me} competing for more depth with @{opponent} Type !help for a list of commands."
-  goodbye_spectators: "SIMULATION TERMINATED@{opponent}.May our paths cross again!?Thanks For watching, {me} signing off!"
+  greeting_spectators: "ITZ Supranova11.0.0 in {me} competing for more depth with @{opponent} Type !help for a list of commands."
+  goodbye_spectators: "SIMULATION TERMINATED @{opponent}.May our paths cross again!?Thanks For watching, {me} signing off!"
 
 whitelist:
   - Supratsa
