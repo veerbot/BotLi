@@ -347,7 +347,7 @@ def alpha_beta(board: chess.Board, depth:int, alpha:int, beta:int, ply:int, allo
     global node_count, TT_AGE
     if timeout(): raise TimeoutError
     node_count += 1
-    key = board.zobrist_hash()
+    key = board.transposition_key()
     ttent = TT.get(key)
     if ttent and ttent.depth >= depth:
         if ttent.flag == TT_EXACT:
@@ -428,7 +428,7 @@ def mate_dfs(board: chess.Board, depth: int, ply: int) -> Optional[int]:
     global node_count
     if timeout(): raise TimeoutError
     node_count += 1
-    key = board.zobrist_hash() ^ depth
+    key = board.transposition_key() ^ depth
     if key in MateTT:
         return MateTT[key]
     if board.is_checkmate():
