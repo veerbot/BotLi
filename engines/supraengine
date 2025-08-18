@@ -581,7 +581,7 @@ def extract_pv(board: chess.Board, depth_limit:int) -> List[chess.Move]:
     pv = []
     b = board.copy()
     for _ in range(depth_limit):
-        e = TT.get(b.transposition_key())
+        e = TT.get(b._transposition_key())
         if not e or not e.best: break
         mv = e.best
         if mv not in b.legal_moves: break
@@ -600,7 +600,7 @@ def uci_loop():
         if not line: break
         line = line.strip()
         if line == "uci":
-            print("id name Supraniva-human")
+            print("id name Supranova-human")
             print("id author Supra")
             print("option name Hash type spin default 32 min 1 max 4096")
             print("option name Threads type spin default 1 min 1 max 8")
