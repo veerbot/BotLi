@@ -1,60 +1,48 @@
-name: Run bot
+name: Build Lc0 DNNL CPU
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - "main"
-    paths:
-      - "user_interface.py"
-  schedule:
-    - cron: "1 */5 * * *"  # Every 5 hours at minute 1
+      - main
 
 jobs:
   build:
-    concurrency:
-      group: bot-run
-      cancel-in-progress: true
-
-    runs-on: windows-latest
-    timeout-minutes: 355  # Just under 6-hour GitHub limit
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install GitHub CLI
-        run: choco install gh -y
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git cmake build-essential \
+              libprotobuf-dev protobuf-compiler \
+              libomp-dev libdnnl-dev wget unzip
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Clone Lc0
+        run: |
+          git clone https://github.com/LeelaChessZero/lc0.git
+          cd lc0
+          git submodule update --init --recursive
+
+      - name: Build Lc0 (DNNL backend)
+        run: |
+          cd lc0
+          mkdir build && cd build
+          cmake -DUSE_DNNL=ON ..
+          make -j$(nproc)
+
+      - name: Download latest Leela network
+        run: |
+          mkdir -p lc0/networks
+          wget -O lc0/networks/network.pb.gz https://storage.lczero.org/files/networks/lc0_main_network.pb.gz
+
+      - name: Upload Lc0 binary + net
+        uses: actions/upload-artifact@v4
         with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Inject Secret Token (via WSL sed)
-        shell: pwsh
-        run: |
-          wsl sed -i "s/TokenTimeIsBackBuddyss/\"${{ secrets.LICHESS_KEY }}\"/" config.yml
-
-      - name: Debug config.yml
-        run: type config.yml
-
-      - name: Run Bot
-        shell: pwsh
-        run: |
-          Write-Host "Starting bot..."
-          # Run Python with your engine in Windows
-          Start-Process -FilePath "python" -ArgumentList "user_interface.py", "tournament Ym8ublrH the_necrominds", "matchmaking" -NoNewWindow
-          Start-Sleep -Seconds 20700  # ~5h 45m
-          Write-Host "Time up. Stopping bot..."
-          Get-Process python | Stop-Process -Force
-
-      - name: 🔁 Self-Restart (Fire-and-Forget)
-        if: always()
-        run: gh workflow run "Run bot"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: lc0-dnnl-package
+          path: |
+            lc0/build/lc0
+            lc0/networks/network.pb.gz
