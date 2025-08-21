@@ -3,12 +3,12 @@ token: "TokenTimeIsBackBuddyss"  # Lichess OAuth2 Token.
 engines:
   standard:
     dir: "./engines"
-    name: "lc0.exe"
+    name: "lc0"
     ponder: false
     silence_stderr: false
     move_overhead_multiplier: 4.5
     uci_options:
-      Threads: 8
+      Threads: 4
      # Hash: 4096
       MoveOverheadMS: 300
      # WeightsFile: "./engines/791556.pb.gz"
@@ -141,7 +141,7 @@ challenge:
   concurrency: 1
   bullet_with_increment_only: false
   max_takebacks: 2
-  min_initial: 60
+  min_initial: 120
   max_initial: 1200
   variants:
     - standard
@@ -171,20 +171,20 @@ matchmaking:
   selection: cyclic
   types:
     bullet:
-      tc: 0+1
+      tc: 0+2
       variant: chess960
     bulle2:
       tc: 3+0
     bc:
       tc: 5+0
     bm3:
-      tc: 1+0
+      tc: 1+2
     gulugulu:
       tc: 0+3
     guliguli:
       tc: 10+0
     hvj:
-      tc: 1.5+0
+      tc: 1.5+1
     win:
       tc: 8+0
     loss:
