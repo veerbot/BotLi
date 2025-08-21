@@ -6,11 +6,11 @@ engines:
     name: "lc0.exe"
     ponder: false
     silence_stderr: false
-    move_overhead_multiplier: 10.5
+    move_overhead_multiplier: 4.5
     uci_options:
       Threads: 2
      # Hash: 4096
-      MoveOverheadMS: 150
+      MoveOverheadMS: 300
       WeightsFile: "./engines/791556.pb.gz"
       UCI_Chess960: true 
     limits:
@@ -21,7 +21,7 @@ engines:
 
 syzygy:
   standard:
-    enabled: true
+    enabled: false
     paths:
       - "./engines/syzygy"
     max_pieces: 7
