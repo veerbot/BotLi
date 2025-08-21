@@ -1,43 +1,45 @@
-name: Build Lc0 DNNL CPU
+name: Build lc0
 
 on:
-  workflow_dispatch:    # Manual trigger
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-lc0:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Install dependencies (DNNL, build tools)
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ git libdnnl-dev wget unzip
+          sudo apt-get install -y cmake g++ git libdnnl-dev wget
 
-      - name: Clone Lc0 release 0.32
+      - name: Clone lc0
         run: |
-          git clone --branch release/0.32 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
-
-      - name: Build Lc0 with DNNL
-        run: |
+          git clone https://github.com/LeelaChessZero/lc0.git
           cd lc0
-          mkdir build && cd build
-          cmake -DUSE_DNNL=ON ..
+          git submodule update --init --recursive
+
+      - name: Build lc0 (CPU DNNL)
+        run: |
+          mkdir -p lc0/build
+          cd lc0/build
+          cmake -DUSE_DNNL=ON -DUSE_OPENBLAS=OFF -DUSE_CUDA=OFF -DUSE_TENSORRT=OFF ..
           make -j$(nproc)
 
-      - name: Download latest network (*.pb.gz)
+      - name: Prepare engines folder
         run: |
-          mkdir -p lc0/networks
-          wget -O lc0/networks/network.pb.gz https://storage.lczero.org/files/networks/lc0_main_network.pb.gz
+          mkdir -p engines
+          cp lc0/build/lc0 engines/
 
-      - name: Upload Lc0 binary + network
-        uses: actions/upload-artifact@v4
-        with:
-          name: lc0-dnnl-package
-          path: |
-            lc0/build/lc0
-            lc0/networks/network.pb.gz
+      - name: Download small test network
+        run: |
+          mkdir -p engines/networks
+          # Small fast network (~2MB)
+          wget -O engines/networks/test.nnue https://training.lczero.org/get_network?sha=2c6a26c07d6d2e51d91d2dbd3a7b0e13b89e2b31c07b48b7f8c0a3c730f3a0a2
+          echo "network file=engines/networks/test.nnue" > engines/lc0.config
+
+      - name: Verify lc0
+        run: |
+          ./engines/lc0 --help
