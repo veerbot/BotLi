@@ -26,12 +26,6 @@ jobs:
       - name: Install GitHub CLI
         run: choco install gh -y
 
-      - name: Install WSL with Ubuntu
-        run: |
-          wsl --install -d Ubuntu
-          wsl --set-default Ubuntu
-          wsl uname -a
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
