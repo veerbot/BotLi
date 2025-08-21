@@ -4,14 +4,15 @@ engines:
   standard:
     dir: "./engines"
     name: "lc0.exe"
-    ponder: true
+    ponder: false
     silence_stderr: false
     move_overhead_multiplier: 10.5
     uci_options:
-      Threads: 4
-      Hash: 4096
+      Threads: 2
+     # Hash: 4096
       MoveOverheadMS: 150
       WeightsFile: "./engines/791556.pb.gz"
+      UCI_Chess960: true 
     limits:
       # time: 20.0
       # depth: 50
