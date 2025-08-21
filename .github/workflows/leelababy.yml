@@ -1,55 +1,45 @@
-name: Run bot
+name: Build lc0
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "user_interface.py"
-  schedule:
-    - cron: "1 */5 * * *"  # Every 5 hours at minute 1
 
 jobs:
-  build:
-    concurrency:
-      group: bot-run
-      cancel-in-progress: false  # Keep this false for fastest restarts
-
-    runs-on: windows-latest
-    timeout-minutes: 355  # Just under 6-hour GitHub limit
-
+  build-lc0:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install GitHub CLI
-        run: choco install gh -y
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Inject Secret Token
-        shell: pwsh
-        run: (Get-Content config.yml) -replace 'TokenTimeIsBackBuddyss','${{ secrets.LICHESS_KEY }}' | Set-Content config.yml
-
-      - name: Run Bot
-        shell: pwsh
+      - name: Install dependencies
         run: |
-          Write-Host "Starting bot..."
-          Start-Process -FilePath "python" -ArgumentList "user_interface.py", "tournament Ym8ublrH the_necrominds", "matchmaking" -NoNewWindow
-          Start-Sleep -Seconds 20700  # ~5h 45m
-          Write-Host "Time up. Stopping bot..."
-          Get-Process python | Stop-Process -Force
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ git libdnnl-dev wget
 
-      - name: 🔁 Self-Restart (Fire-and-Forget)
-        if: always()
-        run: gh workflow run bot.yml
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Clone lc0
+        run: |
+          git clone https://github.com/LeelaChessZero/lc0.git
+          cd lc0
+          git submodule update --init --recursive
+
+      - name: Build lc0 (CPU DNNL)
+        run: |
+          mkdir -p lc0/build
+          cd lc0/build
+          cmake -DUSE_DNNL=ON -DUSE_OPENBLAS=OFF -DUSE_CUDA=OFF -DUSE_TENSORRT=OFF ..
+          make -j$(nproc)
+
+      - name: Prepare engines folder
+        run: |
+          mkdir -p engines
+          cp lc0/build/lc0 engines/
+
+      - name: Download small test network
+        run: |
+          mkdir -p engines/networks
+          # Small fast network (~2MB)
+          wget -O engines/networks/test.nnue https://training.lczero.org/get_network?sha=2c6a26c07d6d2e51d91d2dbd3a7b0e13b89e2b31c07b48b7f8c0a3c730f3a0a2
+          echo "network file=engines/networks/test.nnue" > engines/lc0.config
+
+      - name: Verify lc0
+        run: |
+          ./engines/lc0 --help
