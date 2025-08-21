@@ -1,0 +1,55 @@
+name: Run bot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "user_interface.py"
+  schedule:
+    - cron: "1 */5 * * *"  # Every 5 hours at minute 1
+
+jobs:
+  build:
+    concurrency:
+      group: bot-run
+      cancel-in-progress: false  # Keep this false for fastest restarts
+
+    runs-on: windows-latest
+    timeout-minutes: 355  # Just under 6-hour GitHub limit
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install GitHub CLI
+        run: choco install gh -y
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Inject Secret Token
+        shell: pwsh
+        run: (Get-Content config.yml) -replace 'TokenTimeIsBackBuddyss','${{ secrets.LICHESS_KEY }}' | Set-Content config.yml
+
+      - name: Run Bot
+        shell: pwsh
+        run: |
+          Write-Host "Starting bot..."
+          Start-Process -FilePath "python" -ArgumentList "user_interface.py", "tournament Ym8ublrH the_necrominds", "matchmaking" -NoNewWindow
+          Start-Sleep -Seconds 20700  # ~5h 45m
+          Write-Host "Time up. Stopping bot..."
+          Get-Process python | Stop-Process -Force
+
+      - name: 🔁 Self-Restart (Fire-and-Forget)
+        if: always()
+        run: gh workflow run bot.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
