@@ -2,47 +2,34 @@ name: Build Lc0 DNNL CPU
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git cmake build-essential \
-              libprotobuf-dev protobuf-compiler \
-              libomp-dev libdnnl-dev wget unzip
+          sudo apt-get install -y cmake g++ git libdnnl-dev
 
-      - name: Clone Lc0
+      - name: Clone Lc0 source
         run: |
-          git clone https://github.com/LeelaChessZero/lc0.git
-          cd lc0
-          git submodule update --init --recursive
+          git clone --branch release/0.30.0 https://github.com/LeelaChessZero/lc0.git
 
-      - name: Build Lc0 (DNNL backend)
+      - name: Build Lc0 with DNNL
         run: |
           cd lc0
-          mkdir build && cd build
-          cmake -DUSE_DNNL=ON ..
+          mkdir build
+          cd build
+          cmake -DUSE_DNNL=1 ..
           make -j$(nproc)
 
-      - name: Download latest Leela network
-        run: |
-          mkdir -p lc0/networks
-          wget -O lc0/networks/network.pb.gz https://storage.lczero.org/files/networks/lc0_main_network.pb.gz
-
-      - name: Upload Lc0 binary + net
+      - name: Upload engine artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lc0-dnnl-package
-          path: |
-            lc0/build/lc0
-            lc0/networks/network.pb.gz
+          name: lc0-dnnl
+          path: lc0/build/lc0
