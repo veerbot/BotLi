@@ -14,7 +14,7 @@ jobs:
   build:
     concurrency:
       group: bot-run
-      cancel-in-progress: false  # Keep this false for fastest restarts
+      cancel-in-progress: false
 
     runs-on: windows-latest
     timeout-minutes: 355  # Just under 6-hour GitHub limit
@@ -26,6 +26,12 @@ jobs:
       - name: Install GitHub CLI
         run: choco install gh -y
 
+      - name: Install WSL with Ubuntu
+        run: |
+          wsl --install -d Ubuntu
+          wsl --set-default Ubuntu
+          wsl uname -a
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -35,14 +41,19 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Inject Secret Token
+      - name: Inject Secret Token (via WSL sed)
         shell: pwsh
-        run: (Get-Content config.yml) -replace 'TokenTimeIsBackBuddyss','${{ secrets.LICHESS_KEY }}' | Set-Content config.yml
+        run: |
+          wsl sed -i "s/TokenTimeIsBackBuddyss/\"${{ secrets.LICHESS_KEY }}\"/" config.yml
+
+      - name: Debug config.yml
+        run: type config.yml
 
       - name: Run Bot
         shell: pwsh
         run: |
           Write-Host "Starting bot..."
+          # Run Python with your engine in Windows
           Start-Process -FilePath "python" -ArgumentList "user_interface.py", "tournament Ym8ublrH the_necrominds", "matchmaking" -NoNewWindow
           Start-Sleep -Seconds 20700  # ~5h 45m
           Write-Host "Time up. Stopping bot..."
@@ -50,6 +61,6 @@ jobs:
 
       - name: 🔁 Self-Restart (Fire-and-Forget)
         if: always()
-        run: gh workflow run bot.yml
+        run: gh workflow run "Run bot"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
