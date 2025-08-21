@@ -11,8 +11,6 @@ engines:
       Threads: 4
       Hash: 4096
       MoveOverheadMS: 150
-      #EvalFile: "supranova.nnue"
-      SyzygyFastPlay: true
       WeightsFile: "./engines/791556.pb.gz"
     limits:
       # time: 20.0
