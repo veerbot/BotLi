@@ -42,7 +42,7 @@ jobs:
         run: | 
              chmod +x ./engines/realsupranova
              chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2
-             chmod +x ./engines/supraengine
+             chmod +x ./engines/lc0
 
       - name: Run Bot
         run: |

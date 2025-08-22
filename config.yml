@@ -1,16 +1,17 @@
+
 token:   # Lichess OAuth2 Token.
 
 engines:
   standard:
     dir: "./engines"
-    name: "lc0.exe"
-    ponder: false
+    name: "lc0"
+    ponder: true
     silence_stderr: false
     move_overhead_multiplier: 4.5
     uci_options:
-      Threads: 8
-     # Hash: 4096
-      MoveOverheadMS: 300
+      Threads: 4
+      NNCacheSize: 400000
+      MoveOverheadMS: 200
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
@@ -141,7 +142,7 @@ challenge:
   concurrency: 1
   bullet_with_increment_only: false
   max_takebacks: 2
-  min_initial: 60
+  min_initial: 120
   max_initial: 1200
   variants:
     - standard
@@ -171,20 +172,20 @@ matchmaking:
   selection: cyclic
   types:
     bullet:
-      tc: 0+1
+      tc: 0+2
       variant: chess960
     bulle2:
       tc: 3+0
     bc:
       tc: 5+0
     bm3:
-      tc: 1+0
+      tc: 1+2
     gulugulu:
       tc: 0+3
     guliguli:
       tc: 10+0
     hvj:
-      tc: 1.5+0
+      tc: 1.5+1
     win:
       tc: 8+0
     loss:
