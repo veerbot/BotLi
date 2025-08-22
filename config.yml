@@ -10,7 +10,7 @@ engines:
     uci_options:
       Threads: 4
      # Hash: 4096
-      MoveOverheadMS: 300
+      MoveOverheadMS: 200
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
