@@ -9,7 +9,7 @@ engines:
     move_overhead_multiplier: 4.5
     uci_options:
       Threads: 4
-     # Hash: 4096
+      NNCacheSize: 400000
       MoveOverheadMS: 200
      # WeightsFile: "./engines/791556.pb.gz"
 
