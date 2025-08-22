@@ -6,7 +6,7 @@ on:
     branches:
       - "main"
     paths:
-      - "Botli"
+      - "BotLi"
       - "config.yml"
       - "engines/**"
   schedule:
@@ -25,12 +25,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install GitHub CLI
-        run: sudo apt-get update && sudo apt-get install -y gh
-
       - name: Make Engines + Bot Executable
         run: |
-          chmod +x ./Botli
+          chmod +x ./BotLi
           chmod +x ./engines/realsupranova
           chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2
           chmod +x ./engines/lc0
@@ -40,7 +37,7 @@ jobs:
           LICHESS_BOT_TOKEN: ${{ secrets.LICHESS_BOT_TOKEN }}
         run: |
           echo "Starting bot..."
-          ./Botli "matchmaking" &
+          ./BotLi "matchmaking" "tournament Ym8ublrH the_necrominds" &
           PID=$!
 
           # Auto-exit after ~345 minutes (so restart runs without overlap)
@@ -48,9 +45,3 @@ jobs:
 
           wait $PID
           echo "Bot ended cleanly."
-
-      - name: 🔁 Self-Restart (Fire-and-Forget)
-        if: always()
-        run: gh workflow run bot.yml
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
