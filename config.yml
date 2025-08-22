@@ -4,7 +4,7 @@ engines:
   standard:
     dir: "./engines"
     name: "lc0"
-    ponder: false
+    ponder: true
     silence_stderr: false
     move_overhead_multiplier: 4.5
     uci_options:
