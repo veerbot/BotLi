@@ -13,7 +13,7 @@ engines:
       NNCacheSize: 400000
       MoveOverheadMS: 150
       MinibatchSize: 2
-      Backend: "dnnl"
+     # Backend: "dnnl"
       MaxPrefetch: 5
      # WeightsFile: "./engines/791556.pb.gz"
 
