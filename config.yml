@@ -13,6 +13,7 @@ engines:
       NNCacheSize: 400000
       MoveOverheadMS: 150
       MinibatchSize: 2
+      Backend: dnnl
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
