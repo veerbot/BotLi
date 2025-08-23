@@ -11,7 +11,8 @@ engines:
     uci_options:
       Threads: 4
       NNCacheSize: 400000
-      MoveOverheadMS: 200
+      MoveOverheadMS: 150
+      MinibatchSize: 2
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
