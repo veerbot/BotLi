@@ -144,19 +144,19 @@ resign:
 challenge:
   concurrency: 1
   bullet_with_increment_only: false
-  max_takebacks: 2
+  max_takebacks: 20
   min_initial: 120
   max_initial: 1200
   variants:
     - standard
-    - chess960
-    - antichess
-    - atomic
-    - kingOfTheHill
-    - racingKings
-    - threeCheck
+   # - chess960
+   # - antichess
+ #   - atomic
+  #  - kingOfTheHill
+  #  - racingKings
+ #   - threeCheck
     - fromPosition
-    - crazyhouse
+   # - crazyhouse
   time_controls:
     - bullet
     - blitz
@@ -195,7 +195,7 @@ matchmaking:
       tc: 2+0
     drum:
       tc: 0.5+1
-      variant: chess960
+      variant: standard
 
 messages:
   greeting: "Konnichiwa guzaimase! ❤️‍🔥Using help of SupraNova11 Type !help to glimpse my arsenal. Best of luck"
