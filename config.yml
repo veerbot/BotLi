@@ -135,9 +135,9 @@ offer_draw:
   min_rating: 3000
 
 resign:
-  enabled: false
-  score: -1000
-  consecutive_moves: 6
+  enabled: true
+  score: -1100
+  consecutive_moves: 5
   against_humans: false
   min_rating: 3000
 
