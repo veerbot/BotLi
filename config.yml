@@ -14,6 +14,7 @@ engines:
       MoveOverheadMS: 150
       MinibatchSize: 2
       Backend: dnnl
+      MaxPrefetch: 5
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
