@@ -176,7 +176,7 @@ matchmaking:
   types:
     bullet:
       tc: 0+2
-      variant: chess960
+      #variant: chess960
     bulle2:
       tc: 3+0
     bc:
