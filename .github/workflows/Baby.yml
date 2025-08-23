@@ -50,7 +50,7 @@ jobs:
           chmod +x ./engines/lc0
 
       - name: Debug: Check Lc0 Backend
-        run: |
+          run: |
           echo "Checking Lc0 backend..."
           ./engines/lc0 --help | head -20
           echo "Running backend probe..."
