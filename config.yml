@@ -129,7 +129,7 @@ online_moves:
 offer_draw:
   enabled: true
   score: 10
-  consecutive_moves: 10
+  consecutive_moves: 6
   min_game_length: 40
   against_humans: false
   min_rating: 3000
@@ -182,13 +182,13 @@ matchmaking:
     bc:
       tc: 5+0
     bm3:
-      tc: 1+2
+      tc: 1.5+1
     gulugulu:
       tc: 0+3
     guliguli:
       tc: 10+0
     hvj:
-      tc: 1.5+1
+      tc: 1+0
     win:
       tc: 8+0
     loss:
