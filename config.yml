@@ -22,7 +22,17 @@ engines:
       # time: 20.0
       # depth: 50
       # nodes: 8000000
- 
+  standard_tournament: 
+    dir: "./engines"
+    name: "stockfish-ubuntu-x86-64-bmi2"
+    ponder: true
+    silence_stderr: false 
+    move_overhead_multiplier: 20.0
+    uci_options: 
+      Threads: 4 
+      Hash: 4100
+      MoveOverhead: 100
+    limits: 
 
 syzygy:
   standard:
