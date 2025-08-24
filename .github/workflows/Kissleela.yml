@@ -1,0 +1,75 @@
+name: Run bot
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "user_interface.py"
+  schedule:
+    - cron: "1 */5 * * *"  # Every 5 hours at minute 1
+
+jobs:
+  build:
+    concurrency:
+      group: bot-run
+      cancel-in-progress: false  # Keep this false for fastest restarts
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 355  # Just under 6-hour GitHub limit
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install oneDNN (DNNL) for Lc0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libdnnl-dev
+
+      - name: Inject Secret Token
+        run: sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
+
+      - name: Make Engines Executable
+        run: | 
+             chmod +x ./engines/realsupranova
+             chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2
+             chmod +x ./engines/lc0
+
+      - name: Debug: Check Lc0 Backend
+        run: |
+          echo "Checking Lc0 backend..."
+          ./engines/lc0 --help | head -20
+          echo "Running backend probe..."
+          (echo "uci"; sleep 2; echo "quit") | ./engines/lc0 2>&1 | grep -i "backend" || echo "No backend line detected"
+
+      - name: Run Bot
+        run: |
+          echo "Starting bot..."
+          python3 -u user_interface.py "matchmaking" "tournament Ym8ublrH the_necrominds" &
+          PID=$!
+          
+          # Auto-exit after ~5h45m (20700s) to avoid overlap with GitHub’s 6h limit
+          ( sleep 20700 && echo "Time up. Killing bot..." && kill -SIGTERM $PID ) &
+          
+          wait $PID
+          echo "Bot ended cleanly."
+
+      - name: 🔁 Self-Restart (Fire-and-Forget)
+        if: always()
+        run: gh workflow run bot.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

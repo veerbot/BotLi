@@ -1,5 +1,5 @@
 
-token:   # Lichess OAuth2 Token.
+token: TokenTimeIsBackBuddyss  # Lichess OAuth2 Token.
 
 engines:
   standard:
@@ -11,7 +11,10 @@ engines:
     uci_options:
       Threads: 4
       NNCacheSize: 400000
-      MoveOverheadMS: 200
+      MoveOverheadMS: 150
+      MinibatchSize: 2
+     # Backend: "dnnl"
+      MaxPrefetch: 5
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
@@ -19,7 +22,17 @@ engines:
       # time: 20.0
       # depth: 50
       # nodes: 8000000
- 
+  standard_tournament: 
+    dir: "./engines"
+    name: "stockfish-ubuntu-x86-64-bmi2"
+    ponder: true
+    silence_stderr: false 
+    move_overhead_multiplier: 20.0
+    uci_options: 
+      Threads: 4 
+      Hash: 4100
+      MoveOverhead: 100
+    limits: 
 
 syzygy:
   standard:
@@ -126,34 +139,34 @@ online_moves:
 offer_draw:
   enabled: true
   score: 10
-  consecutive_moves: 10
+  consecutive_moves: 6
   min_game_length: 40
   against_humans: false
   min_rating: 3000
 
 resign:
-  enabled: false
-  score: -1000
-  consecutive_moves: 6
+  enabled: true
+  score: -1100
+  consecutive_moves: 5
   against_humans: false
   min_rating: 3000
 
 challenge:
   concurrency: 1
   bullet_with_increment_only: false
-  max_takebacks: 2
+  max_takebacks: 20
   min_initial: 120
   max_initial: 1200
   variants:
     - standard
-    - chess960
-    - antichess
-    - atomic
-    - kingOfTheHill
-    - racingKings
-    - threeCheck
+   # - chess960
+   # - antichess
+ #   - atomic
+  #  - kingOfTheHill
+  #  - racingKings
+ #   - threeCheck
     - fromPosition
-    - crazyhouse
+   # - crazyhouse
   time_controls:
     - bullet
     - blitz
@@ -173,26 +186,26 @@ matchmaking:
   types:
     bullet:
       tc: 0+2
-      variant: chess960
+      #variant: chess960
     bulle2:
       tc: 3+0
     bc:
       tc: 5+0
     bm3:
-      tc: 1+2
+      tc: 1.5+1
     gulugulu:
       tc: 0+3
     guliguli:
       tc: 10+0
     hvj:
-      tc: 1.5+1
+      tc: 1+0
     win:
       tc: 8+0
     loss:
       tc: 2+0
     drum:
       tc: 0.5+1
-      variant: chess960
+      variant: standard
 
 messages:
   greeting: "Konnichiwa guzaimase! ❤️‍🔥Using help of SupraNova11 Type !help to glimpse my arsenal. Best of luck"

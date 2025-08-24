@@ -1,0 +1,17 @@
+name: Check Lc0 Backends
+
+on:
+  workflow_dispatch:  # run manually
+
+jobs:
+  check-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Make lc0 executable
+        run: chmod +x ./engines/lc0
+
+      - name: Show supported backends
+        run: ./engines/lc0 uci | grep Backend || true
