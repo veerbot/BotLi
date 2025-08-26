@@ -1,0 +1,27 @@
+name: Add Engine Network
+
+on:
+  workflow_dispatch:  # Run manually from Actions tab
+
+jobs:
+  download-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download network file
+        run: |
+          mkdir -p engines
+          curl -L -o engines/t1-256x10-distilled-swa-2432500.pb.gz \
+            https://storage.lczero.org/files/networks-contrib/t1-256x10-distilled-swa-2432500.pb.gz
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add engines/t1-256x10-distilled-swa-2432500.pb.gz
+          git commit -m "Add engine network file"
+          git push
