@@ -7,14 +7,14 @@ engines:
     name: "lc0"
     ponder: true
     silence_stderr: false
-    move_overhead_multiplier: 4.5
+    move_overhead_multiplier: 2.5
     uci_options:
       Threads: 4
       NNCacheSize: 400000
       MoveOverheadMS: 150
-      MinibatchSize: 2
+      MinibatchSize: 4
      # Backend: "dnnl"
-      MaxPrefetch: 5
+    #  MaxPrefetch: 5
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
@@ -36,7 +36,7 @@ engines:
 
 syzygy:
   standard:
-    enabled: false
+    enabled: true
     paths:
       - "./engines/syzygy"
     max_pieces: 7
