@@ -31,7 +31,7 @@ engines:
     uci_options: 
       Threads: 4 
       Hash: 4100
-      MoveOverhead: 100
+      Move Overhead: 100
     limits: 
 
 syzygy:
