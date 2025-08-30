@@ -11,7 +11,7 @@ engines:
     uci_options:
       Threads: 4
       NNCacheSize: 400000
-      MoveOverheadMS: 265
+      MoveOverheadMS: 225
       MinibatchSize: 4
      # Backend: "dnnl"
       MaxPrefetch: 5
@@ -204,7 +204,7 @@ matchmaking:
     win:
       tc: 8+0
     loss:
-      tc: 2+0
+      tc: 2+1
     drum:
       tc: 0.5+1
       variant: standard
