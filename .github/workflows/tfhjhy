@@ -1,0 +1,42 @@
+name: AutoPEP8 Formatter for lichessbot
+
+on:
+  workflow_dispatch:  # Run manually from the Actions tab
+  schedule:
+    - cron: '0 3 * * *' # Optional: Run every day at 3 AM UTC
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          ref: lichessbot  # Check out the lichessbot branch
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install autopep8
+        run: pip install autopep8
+
+      - name: Run autopep8
+        run: |
+          autopep8 --in-place --recursive --aggressive --aggressive .
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No formatting changes to commit."
+          else
+            git commit -m "AutoPEP8: Format code in lichessbot branch"
+            git push origin lichessbot
+          fi
