@@ -59,7 +59,7 @@ jobs:
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          python3 -u user_interface.py "matchmaking" "tournament 9k1htx5F the_necrominds" &
+          python3 -u user_interface.py "matchmaking" "tournament S6o2YKmp the_necrominds" &
           PID=$!
           
           # Auto-exit after ~5h45m (20700s) to avoid hitting GitHub’s 6h limit
