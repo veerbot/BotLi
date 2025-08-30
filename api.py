@@ -34,11 +34,14 @@ class API:
                                                                           'User-Agent': f'BotLi/{config.version}'},
                                                      timeout=aiohttp.ClientTimeout(total=5.0))
         self.external_session = aiohttp.ClientSession(headers={'User-Agent': f'BotLi/{config.version}'})
+        self.chessdb_queue: asyncio.Queue[str] = asyncio.Queue()
+        self._chessdb_worker_task: asyncio.Task[None] = asyncio.create_task(self._chessdb_worker())
 
     async def __aenter__(self) -> 'API':
         return self
 
     async def __aexit__(self, *_) -> None:
+        self._chessdb_worker_task.cancel()
         await self.close()
 
     def append_user_agent(self, username: str) -> None:
@@ -48,6 +51,16 @@ class API:
     async def close(self) -> None:
         await self.lichess_session.close()
         await self.external_session.close()
+
+    async def _chessdb_worker(self) -> None:
+        while fen := await self.chessdb_queue.get():
+            try:
+                async with self.external_session.get('http://www.chessdb.cn/cdb.php',
+                                                     params={'action': 'queue', 'board': fen},
+                                                     timeout=aiohttp.ClientTimeout(total=5.0)):
+                    await asyncio.sleep(1.0)
+            except aiohttp.ClientError as e:
+                print(f'ChessDB Queue: {e}')
 
     @retry(**BASIC_RETRY_CONDITIONS)
     async def abort_game(self, game_id: str) -> bool:
@@ -103,7 +116,7 @@ class API:
                                                  ) as response:
 
                 if response.status == 429:
-                    await queue.put(API_Challenge_Reponse(has_reached_rate_limit=True))
+                    queue.put_nowait(API_Challenge_Reponse(has_reached_rate_limit=True))
                     return
 
                 async for line in response.content:
@@ -111,17 +124,17 @@ class API:
                         continue
 
                     data: dict[str, Any] = json.loads(line)
-                    await queue.put(API_Challenge_Reponse(data.get('id'),
-                                                          data.get('done') == 'accepted',
-                                                          data.get('error'),
-                                                          data.get('done') == 'declined',
-                                                          'clock.limit' in data,
-                                                          'clock.increment' in data))
+                    queue.put_nowait(API_Challenge_Reponse(data.get('id'),
+                                                           data.get('done') == 'accepted',
+                                                           data.get('error'),
+                                                           data.get('done') == 'declined',
+                                                           'clock.limit' in data,
+                                                           'clock.increment' in data))
 
         except (aiohttp.ClientError, json.JSONDecodeError) as e:
-            await queue.put(API_Challenge_Reponse(error=str(e)))
+            queue.put_nowait(API_Challenge_Reponse(error=str(e)))
         except TimeoutError:
-            await queue.put(API_Challenge_Reponse(has_timed_out=True))
+            queue.put_nowait(API_Challenge_Reponse(has_timed_out=True))
 
     @retry(**BASIC_RETRY_CONDITIONS)
     async def decline_challenge(self, challenge_id: str, reason: Decline_Reason) -> bool:
@@ -189,14 +202,14 @@ class API:
         async with self.lichess_session.get('/api/stream/event', timeout=STREAM_TIMEOUT) as response:
             async for line in response.content:
                 if line.strip():
-                    await queue.put(json.loads(line))
+                    queue.put_nowait(json.loads(line))
 
     @retry(**GAME_STREAM_RETRY_CONDITIONS)
     async def get_game_stream(self, game_id: str, queue: asyncio.Queue[dict[str, Any]]) -> None:
         async with self.lichess_session.get(f'/api/bot/game/stream/{game_id}', timeout=STREAM_TIMEOUT) as response:
             async for line in response.content:
                 if line.strip():
-                    await queue.put(json.loads(line))
+                    queue.put_nowait(json.loads(line))
 
     @retry(**JSON_RETRY_CONDITIONS)
     async def get_online_bots(self) -> list[dict[str, Any]]:
@@ -280,14 +293,6 @@ class API:
                 print(f'Joining tournament "{tournament_id}" failed: {json_response["error"]}')
                 return False
             return True
-
-    async def queue_chessdb(self, fen: str) -> None:
-        try:
-            async with self.external_session.get('http://www.chessdb.cn/cdb.php',
-                                                 params={'action': 'queue', 'board': fen}):
-                pass
-        except aiohttp.ClientError as e:
-            print(f'ChessDB Queue: {e}')
 
     @retry(**BASIC_RETRY_CONDITIONS)
     async def resign_game(self, game_id: str) -> bool:
