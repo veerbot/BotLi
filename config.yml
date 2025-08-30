@@ -96,7 +96,7 @@ opening_books:
     
 
 online_moves:
-  dynamic_selection: true
+ # dynamic_selection: true
   opening_explorer:
     enabled: true
     priority: 300
@@ -157,7 +157,7 @@ challenge:
   concurrency: 1
   bullet_with_increment_only: true
   max_takebacks: 20
-  min_initial: 120
+  min_initial: 180
   max_initial: 1200
   variants:
     - standard
@@ -190,7 +190,7 @@ matchmaking:
       tc: 0+3
       #variant: chess960
     bulle2:
-      tc: 3+0
+      tc: 3+2
     bc:
       tc: 5+0
     bm3:
