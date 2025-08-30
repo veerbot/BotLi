@@ -101,7 +101,6 @@ class Online_EGTB_Config:
 
 @dataclass
 class Online_Moves_Config:
-   # dynamic_selection: bool
     opening_explorer: Opening_Explorer_Config
     lichess_cloud: Lichess_Cloud_Config
     chessdb: ChessDB_Config
@@ -115,6 +114,7 @@ class Offer_Draw_Config:
     consecutive_moves: int
     min_game_length: int
     against_humans: bool
+    use_for_variants: bool
     min_rating: int | None
 
 
@@ -124,6 +124,7 @@ class Resign_Config:
     score: int
     consecutive_moves: int
     against_humans: bool
+    use_for_variants: bool
     min_rating: int | None
 
 
@@ -146,8 +147,15 @@ class Challenge_Config:
 class Matchmaking_Type_Config:
     tc: str
     rated: bool | None
-    variant: Literal['standard', 'chess960', 'crazyhouse', 'antichess', 'atomic',
-                     'horde', 'kingOfTheHill', 'racingKings', 'threeCheck'] | None
+    variant: Literal['standard',
+                     'chess960',
+                     'crazyhouse',
+                     'antichess',
+                     'atomic',
+                     'horde',
+                     'kingOfTheHill',
+                     'racingKings',
+                     'threeCheck'] | None
     weight: int | None
     multiplier: int | None
     min_rating_diff: int | None
