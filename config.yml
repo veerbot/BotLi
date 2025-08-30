@@ -14,7 +14,7 @@ engines:
       MoveOverheadMS: 150
       MinibatchSize: 4
      # Backend: "dnnl"
-    #  MaxPrefetch: 5
+      MaxPrefetch: 5
      # WeightsFile: "./engines/791556.pb.gz"
 
       UCI_Chess960: true 
@@ -155,7 +155,7 @@ resign:
 
 challenge:
   concurrency: 1
-  bullet_with_increment_only: false
+  bullet_with_increment_only: true
   max_takebacks: 20
   min_initial: 120
   max_initial: 1200
@@ -187,7 +187,7 @@ matchmaking:
   selection: cyclic
   types:
     bullet:
-      tc: 0+2
+      tc: 0+3
       #variant: chess960
     bulle2:
       tc: 3+0
@@ -200,7 +200,7 @@ matchmaking:
     guliguli:
       tc: 10+0
     hvj:
-      tc: 1+0
+      tc: 1+2
     win:
       tc: 8+0
     loss:
