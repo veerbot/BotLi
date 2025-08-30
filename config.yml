@@ -143,6 +143,7 @@ offer_draw:
   min_game_length: 40
   against_humans: false
   min_rating: 3000
+  use_for_variants: true
 
 resign:
   enabled: true
@@ -150,6 +151,7 @@ resign:
   consecutive_moves: 5
   against_humans: false
   min_rating: 3000
+  use_for_variants: false
 
 challenge:
   concurrency: 1
