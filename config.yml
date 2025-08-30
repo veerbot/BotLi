@@ -7,7 +7,7 @@ engines:
     name: "lc0"
     ponder: true
     silence_stderr: false
-    move_overhead_multiplier: 3.5
+    move_overhead_multiplier: 9.5
     uci_options:
       Threads: 4
       NNCacheSize: 400000
