@@ -35,11 +35,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Install oneDNN (DNNL) for Lc0
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libdnnl-dev
-
       - name: Inject Secret Token
         run: sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
 
@@ -49,17 +44,10 @@ jobs:
           chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2
           chmod +x ./engines/lc0
 
-      - name: Debug Check Lc0 Backend
-        run: |
-          echo "Checking Lc0 backend..."
-          ./engines/lc0 --help | head -20
-          echo "Running backend probe..."
-          (echo "uci"; sleep 2; echo "quit") | ./engines/lc0 2>&1 | grep -i "backend" || echo "No backend line detected"
-
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          python3 -u user_interface.py "matchmaking" "tournament S6o2YKmp the_necrominds" &
+          python3 -u user_interface.py "tournament YnQTooxC" &
           PID=$!
           
           # Auto-exit after ~5h45m (20700s) to avoid hitting GitHub’s 6h limit
