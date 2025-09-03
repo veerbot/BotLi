@@ -1,0 +1,35 @@
+name: Sync Books from VoprosBotNEW
+
+on:
+  workflow_dispatch: # Run manually
+
+jobs:
+  sync-books:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to push changes
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Checkout VoprosBotNEW
+        uses: actions/checkout@v4
+        with:
+          repository: Chess75/VoprosBotNEW
+          path: VoprosBotNEW
+
+      - name: Copy Book Files
+        run: |
+          mkdir -p engines
+          cp VoprosBotNEW/engines/Book1.bin engines/Book1.bin
+          cp VoprosBotNEW/engines/Book2.bin engines/Book2.bin
+          cp VoprosBotNEW/engines/Book3.bin engines/Book3.bin
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add engines/Book1.bin engines/Book2.bin engines/Book3.bin
+          git commit -m "Sync books from VoprosBotNEW" || echo "No changes to commit"
+          git push
