@@ -82,7 +82,7 @@ opening_books:
       names:
         - niki
       #  - optimus4
-        - lilablack
+        - lilawhite
      #   - Titans
       #  - Opimus3.1
        # - optimus4
@@ -223,14 +223,14 @@ blacklist:
  # - VEER-OMEGA-BOT
 books:
  # Titans: "./engines/black.bin"
-  optimus2502: "./engines/OPTIMUS2502.bin"
+  optimus2502: "./engines/Book3.bin"
  # optimus4: "./engines/win.bin"
  # Perfect2023: "./engines/white.bin"
  # Opimus3.1: "./engines/Optical.bin"
  # noob: "./engines/Titans.bin"
 #  ai: "./engines/nikibook.bin"
   gm: "./engines/gm2001(1).bin"
-  niki: "./engines/nikimoves.bin"
-  lilawhite: "./engines/lilawhite.bin"
+  niki: "./engines/Book1.bin"
+  lilawhite: "./engines/Book2.bin"
   lilablack: "./engines/lila.bin"
   
