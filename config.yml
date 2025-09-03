@@ -68,7 +68,7 @@ opening_books:
       selection: best_move 
      # max_depth: 80
       names:
-      #  - ai 
+        - niki 
         - lilawhite
        # - Perfect2023
        # - Opimus3.1
