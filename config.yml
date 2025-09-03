@@ -98,7 +98,7 @@ opening_books:
 online_moves:
  # dynamic_selection: true
   opening_explorer:
-    enabled: true
+    enabled: false
     priority: 300
  #   player: Username
     only_without_book: false
@@ -112,7 +112,7 @@ online_moves:
     # max_depth: 20
 
   lichess_cloud:
-    enabled: true
+    enabled: false
     priority: 200
     only_without_book: true
     min_eval_depth: 20
@@ -122,7 +122,7 @@ online_moves:
     # max_depth: 30
 
   chessdb:
-    enabled: true
+    enabled: false
     priority: 250
     only_without_book: false
     min_candidates: 5
@@ -140,9 +140,9 @@ offer_draw:
   enabled: true
   score: 10
   consecutive_moves: 6
-  min_game_length: 40
+  min_game_length: 30
   against_humans: false
-  min_rating: 3000
+ # min_rating: 3000
   use_for_variants: true
 
 resign:
@@ -150,13 +150,13 @@ resign:
   score: -1100
   consecutive_moves: 5
   against_humans: false
-  min_rating: 3000
+  min_rating: 3100
   use_for_variants: false
 
 challenge:
   concurrency: 1
   bullet_with_increment_only: true
-  max_takebacks: 20
+  max_takebacks: 2
   min_initial: 180
   max_initial: 1200
   variants:
@@ -176,9 +176,9 @@ challenge:
   #  - classical
   bot_modes:
    # - casual
-    - rated
+  #  - rated
   human_modes:
-    - casual
+    #- casual
    #- rated
 
 matchmaking:
