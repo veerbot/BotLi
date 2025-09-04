@@ -187,26 +187,26 @@ matchmaking:
   selection: cyclic
   types:
     bullet:
-      tc: 0+3
+      tc: 4+0
       #variant: chess960
     bulle2:
-      tc: 3+2
+      tc: 3+0
     bc:
       tc: 5+0
     bm3:
-      tc: 1.5+1
+      tc: 3+1
     gulugulu:
       tc: 0+3
     guliguli:
-      tc: 10+0
+      tc: 3+2
     hvj:
-      tc: 1+2
+      tc: 3+3
     win:
-      tc: 8+0
+      tc: 6+0
     loss:
-      tc: 2+1
+      tc: 0.75+0
     drum:
-      tc: 0.5+1
+      tc: 0.5+0
       variant: standard
 
 messages:
