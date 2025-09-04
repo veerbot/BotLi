@@ -47,7 +47,7 @@ jobs:
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          python3 -u user_interface.py "tournament YnQTooxC" &
+          python3 user_interface.py "matchmaking" &
           PID=$!
           
           # Auto-exit after ~5h45m (20700s) to avoid hitting GitHub’s 6h limit
