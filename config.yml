@@ -83,6 +83,7 @@ opening_books:
         - niki
       #  - optimus4
         - lilawhite
+        - badwhite
      #   - Titans
       #  - Opimus3.1
        # - optimus4
@@ -233,4 +234,4 @@ books:
   niki: "./engines/Book1.bin"
   lilawhite: "./engines/Book2.bin"
   lilablack: "./engines/lila.bin"
-  
+  badwhite: "./engines/badwhite.bin"
