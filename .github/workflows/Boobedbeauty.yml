@@ -1,0 +1,57 @@
+name: Run botlilichess
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+    paths:
+      - "user_interface.py"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355  # just under 6h limit
+
+    concurrency:
+      group: bot-run
+      cancel-in-progress: false  # keep live jobs safe
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies & prepare
+        run: |
+          pip install -r requirements.txt
+          sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
+          chmod +x ./engines/realsupranova ./engines/stockfish-ubuntu-x86-64-bmi2 ./engines/lc0
+
+      - name: Run Bot
+        run: |
+          echo "Starting bot..."
+          python3 -u user_interface.py "tournament TF0L5jDH" "matchmaking" &
+          PID=$!
+          # Auto-exit before GitHub 6h limit
+          ( sleep 20700 && echo "Time up. Killing bot..." && kill -SIGTERM $PID ) &
+          wait $PID
+          echo "Bot ended cleanly."
+
+      - name: 🔁 Self-Restart
+        if: always()
+        run: gh workflow run "Run botli"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
