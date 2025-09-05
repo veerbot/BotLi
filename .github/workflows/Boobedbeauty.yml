@@ -38,7 +38,7 @@ jobs:
         run: |
           pip install -r requirements.txt
           sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
-          chmod +x ./engines/realsupranova ./engines/stockfish-ubuntu-x86-64-bmi2 
+          chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2 
 
       - name: Run Bot
         run: |
