@@ -351,7 +351,7 @@ class Lichess_Game:
                     entries.sort(key=lambda entry: entry.weight, reverse=True)
 
             for entry in entries:
-               # if not self._is_repetition(entry.move):
+                if not self._is_repetition(entry.move):
                     break
             else:
                 continue
