@@ -1,4 +1,4 @@
-name: Run botlichess
+name: Run botlilichess
 
 on:
   workflow_dispatch:
