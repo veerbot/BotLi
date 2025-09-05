@@ -38,12 +38,12 @@ jobs:
         run: |
           pip install -r requirements.txt
           sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
-          chmod +x ./engines/realsupranova ./engines/stockfish-ubuntu-x86-64-bmi2 ./engines/lc0
+          chmod +x ./engines/realsupranova ./engines/stockfish-ubuntu-x86-64-bmi2 
 
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          python3 -u user_interface.py "tournament TF0L5jDH" "matchmaking" &
+          python3 -u user_interface.py "tournament YnQTooxC" &
           PID=$!
           # Auto-exit before GitHub 6h limit
           ( sleep 20700 && echo "Time up. Killing bot..." && kill -SIGTERM $PID ) &
