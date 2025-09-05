@@ -1,4 +1,4 @@
-name: Run botlilichess
+name: Run botlichess
 
 on:
   workflow_dispatch:
@@ -24,9 +24,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
-      - name: Cache Python dependencies
+      - name: Cache pip downloads
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies & prepare
         run: |
-          pip install -r requirements.txt
+          pip install --no-cache-dir --prefer-binary -r requirements.txt
           sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
           chmod +x ./engines/stockfish-ubuntu-x86-64-bmi2 
 
@@ -52,6 +52,6 @@ jobs:
 
       - name: 🔁 Self-Restart
         if: always()
-        run: gh workflow run "Run botlilichess"
+        run: gh workflow run "Run botlichess"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
