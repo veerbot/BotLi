@@ -97,13 +97,18 @@ opening_books:
         - gm
       #  - noob
        # - Titans   
+    chess960:
+      selection: best_move
+      allow_repetitions: true
+      names:
+        - chess960
     
 
 online_moves:
  # dynamic_selection: true
   opening_explorer:
-    enabled: false
-    priority: 300
+    enabled: true
+    priority: 249
  #   player: Username
     only_without_book: false
     use_for_variants: true
@@ -112,7 +117,7 @@ online_moves:
     timeout: 5
     min_games: 10
     only_with_wins: true
-    selection: "win_rate"
+    selection: "performance"
     anti: true
     # max_depth: 20
 
@@ -129,7 +134,7 @@ online_moves:
     # max_depth: 30
 
   chessdb:
-    enabled: false
+    enabled: true
     priority: 250
     only_without_book: false
     min_candidates: 2
@@ -244,3 +249,4 @@ books:
   lilawhite: "./engines/Book2.bin"
   lilablack: "./engines/lila.bin"
   badwhite: "./engines/badwhite.bin"
+  chess960: "./engines/chess960.bin"
