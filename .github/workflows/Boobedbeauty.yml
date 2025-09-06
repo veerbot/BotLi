@@ -52,6 +52,6 @@ jobs:
 
       - name: 🔁 Self-Restart
         if: always()
-        run: gh workflow run "Run botlichess"
+        run: gh workflow run "Run botlilichess"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
