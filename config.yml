@@ -66,6 +66,7 @@ opening_books:
   books:
     standard_white:
       selection: best_move 
+      allow_repetitions: true  
      # max_depth: 80
       names:
         - niki 
@@ -78,6 +79,7 @@ opening_books:
       #  - noob
     standard_black:
       selection: best_move 
+      allow_repetitions: true  
      # max depth : 45 
       names:
         - niki
@@ -90,6 +92,7 @@ opening_books:
         - optimus2502
     standard_human: 
       selection: best_move 
+      allow_repetitions: false
       names: 
         - gm
       #  - noob
@@ -104,6 +107,7 @@ online_moves:
  #   player: Username
     only_without_book: false
     use_for_variants: true
+    allow_repetitions: true 
     min_time: 20
     timeout: 5
     min_games: 10
@@ -120,16 +124,21 @@ online_moves:
     min_time: 10
     timeout: 3
     use_for_variants: false
+    allow_repetitions: false       
+    trust_eval: true 
     # max_depth: 30
 
   chessdb:
     enabled: false
     priority: 250
     only_without_book: false
-    min_candidates: 5
+    min_candidates: 2
     min_time: 20
     timeout: 3
     selection: "optimal"
+    allow_repetitions: true      
+    trust_eval: true 
+    
     # max_depth: 30
 
   online_egtb:
