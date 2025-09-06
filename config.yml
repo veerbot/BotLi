@@ -27,11 +27,11 @@ engines:
     name: "stockfish-ubuntu-x86-64-bmi2"
     ponder: true
     silence_stderr: false 
-    move_overhead_multiplier: 1.0
+    move_overhead_multiplier: 15.0
     uci_options: 
       Threads: 8 
       Hash: 4096
-      Move Overhead: 225
+      Move Overhead: 140
     limits: 
 
 syzygy:
