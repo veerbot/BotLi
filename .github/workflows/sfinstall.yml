@@ -1,4 +1,4 @@
-name: Download and Commit Stockfish
+name: Download and Commit Stock
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Download and extract Stockfish
         run: |
-          curl -L "https://github.com/official-stockfish/Stockfish/releases/download/stockfish-dev-20250902-adfddd2c/stockfish-ubuntu-x86-64-bmi2.tar" -o stockfish.tar
+          curl -L "https://github.com/official-stockfish/Stockfish/releases/download/stockfish-dev-20250906-bfc70005/stockfish-ubuntu-x86-64-bmi2.tar" -o stockfish.tar
           tar -xf stockfish.tar  # This creates 'stockfish/' folder with the binary
 
       - name: Move Stockfish binary to engines folder
@@ -32,5 +32,5 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add engines/stockfish-ubuntu-x86-64-bmi2
-          git commit -m "Update Stockfish binary"
+          git commit -m "Spank sexy busty ass of einakshi super hard and hot"
           git push
