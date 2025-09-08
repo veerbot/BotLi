@@ -27,11 +27,11 @@ engines:
     name: "stockfish-ubuntu-x86-64-bmi2"
     ponder: true
     silence_stderr: false 
-    move_overhead_multiplier: 15.0
+    move_overhead_multiplier: 10.0
     uci_options: 
       Threads: 8 
       Hash: 4096
-      Move Overhead: 140
+      Move Overhead: 100
     limits: 
 
 syzygy:
@@ -62,7 +62,7 @@ gaviota:
 
 opening_books:
   enabled: true
-  priority: 400
+  priority: 401
   books:
     standard_white:
       selection: best_move 
@@ -157,7 +157,7 @@ offer_draw:
   consecutive_moves: 6
   min_game_length: 30
   against_humans: false
- # min_rating: 3000
+  min_rating: 3000
   use_for_variants: true
 
 resign:
