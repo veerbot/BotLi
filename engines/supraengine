@@ -476,7 +476,7 @@ def alpha_beta(
     best_move: Optional[chess.Move] = None
     first = True
 
-    for i, mv in enumerate(moves):
+    for i, mv in enumerate(moves): # type: chess.Move
         # futility pruning for shallow depths
         if depth <= 2 and not board.is_capture(mv) and not board.gives_check(mv) and not mv.promotion:
             est = evaluate(board)
