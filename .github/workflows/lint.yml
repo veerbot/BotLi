@@ -33,7 +33,7 @@ jobs:
 
       - name: Run autopep8 (minimal changes)
         run: |
-          autopep8 --in-place --max-line-length 120 user_interface.py
+          autopep8 --in-place --aggressive --aggressive --aggressive user_interface.py
 
       - name: Commit and push to lichessbot
         run: |
