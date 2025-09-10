@@ -2,9 +2,10 @@ name: Lint and AutoFix user_interface.py
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "user_interface.py"
   pull_request:
-    branches:
-      - main
     paths:
       - "user_interface.py"
 
@@ -15,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -32,15 +33,18 @@ jobs:
 
       - name: Run autopep8 (minimal changes)
         run: |
-          # Only apply basic formatting, no aggressive changes
           autopep8 --in-place --max-line-length 120 user_interface.py
 
-      - name: Commit changes to lichessbot branch
+      - name: Commit and push to lichessbot
         run: |
+          # Switch to lichessbot branch (create if it doesn't exist)
+          git fetch origin lichessbot || true
+          git checkout lichessbot || git checkout -b lichessbot
+
+          # Add and commit changes if autopep8 made any
           if ! git diff --exit-code; then
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
-            git checkout -B lichessbot
             git add user_interface.py
             git commit -m "Auto-format user_interface.py with autopep8 (minimal changes)"
             git push origin lichessbot
