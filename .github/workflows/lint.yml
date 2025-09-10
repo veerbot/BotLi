@@ -30,16 +30,18 @@ jobs:
       - name: Run pylint (report only)
         run: pylint user_interface.py || true
 
-      - name: Run autopep8 (minimal aggressiveness)
+      - name: Run autopep8 (minimal changes)
         run: |
-          autopep8 --in-place --aggressive --aggressive user_interface.py
+          # Only apply basic formatting, no aggressive changes
+          autopep8 --in-place --max-line-length 120 user_interface.py
 
-      - name: Commit changes if needed
+      - name: Commit changes to lichessbot branch
         run: |
           if ! git diff --exit-code; then
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
+            git checkout -B lichessbot
             git add user_interface.py
-            git commit -m "Auto-format user_interface.py with autopep8"
-            git push origin main
+            git commit -m "Auto-format user_interface.py with autopep8 (minimal changes)"
+            git push origin lichessbot
           fi
