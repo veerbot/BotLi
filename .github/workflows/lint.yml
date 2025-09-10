@@ -3,9 +3,13 @@ name: Lint and AutoFix user_interface.py
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
       - "user_interface.py"
   pull_request:
+    branches:
+      - main
     paths:
       - "user_interface.py"
 
@@ -26,24 +30,24 @@ jobs:
 
       - name: Install tools
         run: |
+          pip install --upgrade pip
           pip install pylint autopep8
 
       - name: Run pylint (report only)
         run: pylint user_interface.py || true
 
-      - name: Run autopep8 (minimal changes)
+      - name: Run autopep8 (one extra aggressive level)
         run: |
-          autopep8 --in-place --aggressive --aggressive --aggressive user_interface.py
+          autopep8 --in-place --aggressive --aggressive --aggressive --max-line-length 120 user_interface.py
 
-      - name: Commit changes to lichessbot branch
+      - name: Commit changes to lichessbot branch if any
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git fetch origin lichessbot:lichessbot
           git checkout lichessbot
           git add user_interface.py
           if ! git diff --cached --quiet; then
-            git commit -m "Auto-format user_interface.py with autopep8"
+            git commit -m "Auto-format user_interface.py with autopep8 (one extra aggressive)"
             git push origin lichessbot
-          else
-            echo "No changes to commit."
           fi
