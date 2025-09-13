@@ -1,4 +1,4 @@
-name: Pyright Type Check
+name: checkass
 
 on:
   push:
