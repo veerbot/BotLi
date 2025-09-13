@@ -25,6 +25,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install python-chess requests pyright
+          pip install --upgrade types-python-chess
 
       - name: Run Pyright
         run: |
