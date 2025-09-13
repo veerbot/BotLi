@@ -86,12 +86,8 @@ def within_node_limit() -> bool:
 
 
 def get_key(board: chess.Board) -> int:
-    """Return a transposition key: prefer private _transposition_key if present."""
-    # Keep using _transposition_key when available (works on many python-chess versions).
-    # Fall back to public API if attribute missing.
-    if hasattr(board, "_transposition_key"):
-        return board._transposition_key  # type: ignore[attr-defined]
-    return board.transposition_key()
+    """Return a transposition key using zobrist_hash(), which is always present."""
+    return board.zobrist_hash()
 
 
 # ---------- BITBOARD HELPERS ----------
@@ -137,10 +133,10 @@ def see_safe(board: chess.Board, move: chess.Move) -> int:
         b.push(move)
         if board.is_en_passant(move):
             captured_piece_type = chess.PAWN
-            base = PIECE_VALUE[captured_piece_type]
+            base = PIECE_VALUE.get(captured_piece_type, 0)
         else:
             captured_piece = board.piece_at(move.to_square)
-            base = PIECE_VALUE[captured_piece.piece_type] if captured_piece else 0
+            base = PIECE_VALUE.get(captured_piece.piece_type, 0) if captured_piece else 0
 
         gains: List[int] = [base]
         side = not board.turn
@@ -150,9 +146,11 @@ def see_safe(board: chess.Board, move: chess.Move) -> int:
                 break
             # choose least valuable attacker
             best_sq = attackers[0]
-            best_val = PIECE_VALUE[b.piece_at(best_sq).piece_type]
+            piece = b.piece_at(best_sq)
+            best_val = PIECE_VALUE.get(piece.piece_type, 0) if piece else 0
             for a in attackers:
-                v = PIECE_VALUE[b.piece_at(a).piece_type]
+                piece_a = b.piece_at(a)
+                v = PIECE_VALUE.get(piece_a.piece_type, 0) if piece_a else 0
                 if v < best_val:
                     best_val = v
                     best_sq = a
@@ -160,7 +158,7 @@ def see_safe(board: chess.Board, move: chess.Move) -> int:
             if cap_move not in b.legal_moves:
                 break
             captured_now = b.piece_at(move.to_square)
-            captured_now_val = PIECE_VALUE[captured_now.piece_type] if captured_now else 0
+            captured_now_val = PIECE_VALUE.get(captured_now.piece_type, 0) if captured_now else 0
             gains.append(captured_now_val - gains[-1])
             b.push(cap_move)
             side = not side
@@ -196,7 +194,7 @@ def see(board: chess.Board, move: chess.Move) -> int:
         victim_sq = to_sq
         victim_piece_type = victim_piece.piece_type if victim_piece else None
 
-    victim_value = PIECE_VALUE[victim_piece_type] if victim_piece_type else 0
+    victim_value = PIECE_VALUE.get(victim_piece_type, 0) if victim_piece_type else 0
 
     # Build attacker masks for both colors
     attackers_white = pbb.attackers_bb(chess.WHITE, to_sq)
@@ -237,9 +235,11 @@ def see(board: chess.Board, move: chess.Move) -> int:
             break
         # choose least-valuable attacker
         best_sq = attackers[0]
-        best_val = PIECE_VALUE[b.piece_at(best_sq).piece_type]
+        piece = b.piece_at(best_sq)
+        best_val = PIECE_VALUE.get(piece.piece_type, 0) if piece else 0
         for a in attackers:
-            pv = PIECE_VALUE[b.piece_at(a).piece_type]
+            piece_a = b.piece_at(a)
+            pv = PIECE_VALUE.get(piece_a.piece_type, 0) if piece_a else 0
             if pv < best_val:
                 best_val = pv
                 best_sq = a
@@ -247,7 +247,7 @@ def see(board: chess.Board, move: chess.Move) -> int:
         if cap_move not in b.legal_moves:
             break
         captured_now = b.piece_at(to_sq)
-        captured_now_val = PIECE_VALUE[captured_now.piece_type] if captured_now else 0
+        captured_now_val = PIECE_VALUE.get(captured_now.piece_type, 0) if captured_now else 0
         gains.append(captured_now_val - gains[-1])
         try:
             b.push(cap_move)
@@ -267,8 +267,8 @@ def mvv_lva_score(board: chess.Board, move: chess.Move) -> int:
     if board.is_capture(move):
         victim = board.piece_at(move.to_square)
         attacker = board.piece_at(move.from_square)
-        v = PIECE_VALUE[victim.piece_type] if victim else 0
-        a = PIECE_VALUE[attacker.piece_type] if attacker else 0
+        v = PIECE_VALUE.get(victim.piece_type, 0) if victim else 0
+        a = PIECE_VALUE.get(attacker.piece_type, 0) if attacker else 0
         # larger is better: prefer captures of high-value victims with low-value attackers
         return v * 100 - a
     if move.promotion:
@@ -476,7 +476,7 @@ def alpha_beta(
     best_move: Optional[chess.Move] = None
     first = True
 
-    for i, mv in enumerate(moves): # type: chess.Move
+    for i, mv in enumerate(moves):
         # futility pruning for shallow depths
         if depth <= 2 and not board.is_capture(mv) and not board.gives_check(mv) and not mv.promotion:
             est = evaluate(board)
