@@ -86,8 +86,12 @@ def within_node_limit() -> bool:
 
 
 def get_key(board: chess.Board) -> int:
-    """Return a transposition key using zobrist_hash(), which is always present."""
-    return board.zobrist_hash()
+    # Use Zobrist hash (runtime), but silence Pyright with type: ignore.
+    try:
+        return board.zobrist_hash()  # type: ignore[attr-defined]
+    except AttributeError:
+        # Fallback for ancient python-chess versions
+        return hash(board.fen())
 
 
 # ---------- BITBOARD HELPERS ----------
