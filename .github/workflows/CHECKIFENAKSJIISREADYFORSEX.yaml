@@ -13,6 +13,8 @@ jobs:
 
       - name: Make engine executable
         run: chmod +x ./engines/supraengine
+      - name: bokachodarbaccha
+        run: pip install python-chess
 
       - name: Run UCI test
         run: |
