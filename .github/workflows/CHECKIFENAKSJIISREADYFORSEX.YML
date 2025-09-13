@@ -1,0 +1,26 @@
+name: test-engine
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  test-engine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make engine executable
+        run: chmod +x ./engines/supraengine
+
+      - name: Run UCI test
+        run: |
+          ./engines/supraengine <<EOF
+          uci
+          isready
+          ucinewgame
+          position startpos
+          go movetime 100
+          quit
+          EOF
