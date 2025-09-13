@@ -1,42 +1,31 @@
-name: AutoPEP8 Formatter for lichessbot
+name: Pyright Type Check
 
 on:
-  workflow_dispatch:  # Run manually from the Actions tab
-  schedule:
-    - cron: '0 3 * * *' # Optional: Run every day at 3 AM UTC
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  format:
+  type-check:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
-          ref: lichessbot  # Check out the lichessbot branch
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
-      - name: Install autopep8
-        run: pip install autopep8
-
-      - name: Run autopep8
+      - name: Install dependencies
         run: |
-          autopep8 --in-place --recursive --aggressive --aggressive .
+          python -m pip install --upgrade pip
+          pip install python-chess requests pyright
 
-      - name: Commit and push changes
+      - name: Run Pyright
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          if git diff --cached --quiet; then
-            echo "No formatting changes to commit."
-          else
-            git commit -m "AutoPEP8: Format code in lichessbot branch"
-            git push origin lichessbot
-          fi
+          npx pyright engines/supraengine
