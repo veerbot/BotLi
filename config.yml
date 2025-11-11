@@ -25,7 +25,7 @@ engines:
   standard: 
     dir: "./engines"
     name: "supranova"
-    ponder: true
+    ponder: false
     silence_stderr: false 
     move_overhead_multiplier: 10.7
     uci_options: 
