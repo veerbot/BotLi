@@ -30,7 +30,7 @@ engines:
     move_overhead_multiplier: 10.7
     uci_options: 
       Threads: 4
-      Hash: 4500
+      Hash: 4096
       Table Memory: 748
      # Personality: "Aggressive"
       #Dynamism: 130
