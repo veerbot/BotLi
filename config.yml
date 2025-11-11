@@ -24,7 +24,7 @@ engines:
       # nodes: 8000000
   standard: 
     dir: "./engines"
-    name: "stockfish-ubuntu-x86-64-bmi2"
+    name: "supranova"
     ponder: true
     silence_stderr: false 
     move_overhead_multiplier: 10.7
@@ -38,16 +38,16 @@ engines:
      # Backend: "dnnl"
     #  MiniBatchSize: 4 
     limits: 
-  standard_human:
-    dir: "./engines"
-    name: "dragon-linux-avx2"
-    ponder: false
-    silence_stderr: false
-    move_overhead_multiplier: 2.0
-    uci_options:
-      Threads: 4
-      Hash: 4096
-    limits:
+#  standard_human:
+  #  dir: "./engines"
+  #  name: "dragon-linux-avx2"
+ #   ponder: false
+  #  silence_stderr: false
+#    move_overhead_multiplier: 2.0
+  #  uci_options:
+    #  Threads: 4
+#      Hash: 4096
+ #   limits:
 
 syzygy:
   standard:
