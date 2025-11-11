@@ -242,7 +242,7 @@ matchmaking:
     win:
       tc: 6+0
     loss:
-      tc: 0.75+0
+      tc: 0.75+4
     drum:
       tc: 0.5+8
       variant: standard
@@ -259,7 +259,8 @@ whitelist:
 blacklist:
  # - NimsiluBot
  # - VEER-OMEGA-BOT
-online_blacklists:                        # List of URLs for online blacklists. One username per line.
+online_blacklists:
+  - https://raw.githubusercontent.com/xu-shawn/lichess-bots-blocklist/refs/heads/main/blocklist  # Contains most of the bot accounts that use Stockfish.# List of URLs for online blacklists. One username per line.
 books:
  # Titans: "./engines/black.bin"
   optimus2502: "./engines/Book3.bin"
