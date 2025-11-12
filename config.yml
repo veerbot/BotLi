@@ -27,7 +27,7 @@ engines:
     name: "supranova"
     ponder: false
     silence_stderr: false 
-    move_overhead_multiplier: 10.7
+    move_overhead_multiplier: 3.0
     uci_options: 
       Threads: 4
       Hash: 4096
@@ -206,13 +206,13 @@ challenge:
     - fromPosition
    # - crazyhouse
   bot_time_controls:
-    - bullet
-    - blitz
+  #  - bullet
+  #  - blitz
     - rapid
-  #  - classical
+    - classical
   human_time_controls:
     - rapid
-    - blitz
+    #- blitz
   bot_modes:
     - casual
     - rated
@@ -226,26 +226,26 @@ matchmaking:
   selection: cyclic
   types:
     bullet:
-      tc: 4+0
+      tc: 4+6
       #variant: chess960
     bulle2:
-      tc: 3+0
+      tc: 3+8
     bc:
-      tc: 5+0
+      tc: 5+5
     bm3:
-      tc: 3+1
+      tc: 3+5
     gulugulu:
-      tc: 1+1
+      tc: 7+2
     guliguli:
-      tc: 3+2
+      tc: 15+0
     hvj:
-      tc: 3+3
+      tc: 25+5
     win:
-      tc: 6+0
+      tc: 7+1
     loss:
-      tc: 0.75+4
+      tc: 10+5
     drum:
-      tc: 0.5+8
+      tc: 8+2
       variant: standard
 
 messages:
