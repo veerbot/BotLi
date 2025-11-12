@@ -212,12 +212,13 @@ challenge:
   #  - classical
   human_time_controls:
     - rapid
+    - blitz
   bot_modes:
-   # - casual
-   # - rated
+    - casual
+    - rated
   human_modes:
-    #- casual
-    #- rated
+    - casual
+    - rated
 
 matchmaking:
   delay: 676
