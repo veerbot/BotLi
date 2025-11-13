@@ -19,7 +19,7 @@ jobs:
 
       - name: Download SupraNova engine
         run: |
-          curl -L -o engines/supranova https://github.com/suprateem-ux/SupraNova-Chess-engine-/releases/download/v1.0.17/Supranova-ubuntu-latest
+          curl -L -o engines/supranova https://github.com/suprateem-ux/SupraNova-Chess-engine-/releases/download/v1.0.22/Supranova-ubuntu-latest
           chmod +x engines/supranova
 
       - name: Commit and push engine
