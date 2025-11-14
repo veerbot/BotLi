@@ -229,7 +229,7 @@ matchmaking:
       tc: 4+6
       #variant: chess960
     bulle2:
-      tc: 3+8
+      tc: 1+0
     bc:
       tc: 5+5
     bm3:
@@ -241,7 +241,7 @@ matchmaking:
     hvj:
       tc: 25+5
     win:
-      tc: 7+1
+      tc: 3+0
     loss:
       tc: 10+5
     drum:
