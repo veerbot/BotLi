@@ -23,6 +23,7 @@ jobs:
 
       - name: Make Executable
         run: |
+          pip install chess
           pip install numpy
           chmod +x ./botli-linux 
           chmod +x ./engines/supranova ./engines/Supranova
