@@ -1495,7 +1495,9 @@ def uci_loop() -> None:
             multipv_list = search_result.get('multipv_list')
             best = search_result.get('best')
             if multipv_list:
-                for idx, (sc, pv) in enumerate(multipv_list, start=1):
+                for idx, entry in enumerate(multipv_list, start=1):
+                    sc = entry[0]
+                    pv = entry[1]
                     if abs(sc) > MATE_VALUE // 2:
                         mate = (MATE_VALUE - abs(sc)) // 100
                         score_str = f"mate {mate if sc > 0 else -mate}"
