@@ -880,7 +880,7 @@ def quiescence(board: chess.Board, alpha: int, beta: int, depth: int = 0) -> int
     """2-ply tactical quiescence search with SEE pruning and quiet tactical extensions."""
     global node_count
     if timeout():
-        return evalulate(board)
+        return evaluate(board)
     node_count += 1
     LOSS_THRESHOLD = 350
     REPETITION_PENALTY = 30
