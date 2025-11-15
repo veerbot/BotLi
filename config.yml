@@ -24,7 +24,7 @@ engines:
       # nodes: 8000000
   standard: 
     dir: "./engines"
-    name: "Supranova"
+    name: "supranova"
     ponder: false
     silence_stderr: false 
     move_overhead_multiplier: 3.0
