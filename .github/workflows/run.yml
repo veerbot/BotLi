@@ -24,7 +24,7 @@ jobs:
       - name: Make Executable
         run: |
           chmod +x ./botli-linux 
-          chmod +x ./engines/supranova .engines/Supranova
+          chmod +x ./engines/supranova ./engines/Supranova
           # Inject Lichess token into config
           sed -i "s/TokenTimeIsBackBuddyss/${{ secrets.LICHESS_KEY }}/g" config.yml
 
