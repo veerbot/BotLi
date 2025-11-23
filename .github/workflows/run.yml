@@ -33,7 +33,7 @@ jobs:
       - name: Run Bot
         run: |
           echo "Starting bot..."
-          ./botli-linux --upgrade "matchmaking" "join royalracer-fans" "join the_necrominds" "t qKx4KCzP royalracer-fans" &
+          ./botli-linux --upgrade "matchmaking" "join royalracer-fans" "join the_necrominds" "t qKx4KCzP royalracer-fans" "t pnKj7Hai" &
           PID=$!
           # Auto-exit before GitHub 6h limit (20700s ≈ 5h45min)
           ( sleep 20700 && echo "Time up. Killing bot..." && kill -SIGTERM $PID ) &
